@@ -8,25 +8,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		// Aqui são aplicadas as configuração iniciais da janela no momento da sua criação.
 		case WM_CREATE:{
 			// Constroe e vincula os menus à janela principal.
-			HMENU hMenuOne, hMenuTwo, hMenuThree;
-			HMENU hSubMenuOne, hSubMenuTwo;
+			HMENU hMenu, hSubMenuOne;
 			
-			hMenuOne = CreateMenu();
-			hMenuTwo = CreateMenu();
-			hMenuThree = CreateMenu();
-			
-			hSubMenuTwo = CreatePopupMenu();
-			AppendMenu(hSubMenuTwo, MF_STRING, ID_MENU_20, "C&aixa");
-			AppendMenu(hMenuTwo, MF_STRING | MF_POPUP, (UINT)hSubMenuTwo, "F&echamento");
-			
-			AppendMenu(hMenuThree, MF_STRING, ID_MENU_30, "S&air");
-			
+			hMenu = CreateMenu();
 			hSubMenuOne = CreatePopupMenu();
-			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_10, "I&niciar Venda");
-			AppendMenu(hMenuOne, MF_STRING | MF_POPUP, (UINT)hSubMenuOne, "V&enda");
-			AppendMenu(hMenuOne, MF_STRING, (UINT)hMenuTwo, "V&enda");
 			
-			SetMenu(hwnd, hMenuOne);
+			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_10, "I&niciar Venda");
+			AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
+			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_11, "C&aixa");
+			AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
+			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_12, "S&air");
+			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenuOne, "V&enda");
+			
+			SetMenu(hwnd, hMenu);
 			
 			break;
 		}
@@ -68,7 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Venda de Ingresssos",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Sistema de Venda de Ingresssos",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
 		640, /* width */
