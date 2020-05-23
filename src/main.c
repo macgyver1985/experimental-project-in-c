@@ -1,5 +1,37 @@
 #include <windows.h>
+#include <commctrl.h>
 #include "resources.h"
+
+const char g_szClassName[] = "myWindowClass";
+const char g_szChildClassName[] = "myMDIChildWindowClass";
+HWND g_hMDIClient = NULL;
+HWND g_hMainWindow = NULL;
+
+HWND CreateNewMDIChild(HWND hMDIClient, LPCWSTR title)
+{
+	MDICREATESTRUCT mcs;
+	HWND hChild;
+
+	mcs.szTitle = title;
+	mcs.szClass = g_szChildClassName;
+	mcs.hOwner  = GetModuleHandle(NULL);
+	mcs.x = mcs.cx = CW_USEDEFAULT;
+	mcs.y = mcs.cy = CW_USEDEFAULT;
+	mcs.style = MDIS_ALLCHILDSTYLES;
+	
+	hChild = (HWND)SendMessage(hMDIClient, WM_MDICREATE, 0, (LONG)&mcs);
+	
+	ShowWindow(hChild, SW_MAXIMIZE);
+	UpdateWindow(hChild);
+	
+	if(!hChild)
+	{
+		MessageBox(hMDIClient, "MDI Child creation failed.", "Oh Oh...",
+			MB_ICONEXCLAMATION | MB_OK);
+	}
+	
+	return hChild;
+}
 
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
@@ -24,13 +56,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			
 			CLIENTCREATESTRUCT ccs;
 			
-		    ccs.hWindowMenu  = GetSubMenu(GetMenu(hwnd), 2);
-		    ccs.idFirstChild = ID_MDI_FIRSTCHILD;
+		    ccs.hWindowMenu  = GetSubMenu(GetMenu(hwnd), 1);
+		    ccs.idFirstChild = ID_MDI_SALE;
 			
 		    g_hMDIClient = CreateWindowEx(WS_EX_CLIENTEDGE, "mdiclient", NULL,
 		        WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
 		        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		        hwnd, (HMENU)IDC_MAIN_MDI, GetModuleHandle(NULL), (LPVOID)&ccs);
+		        hwnd, (HMENU)ID_MENU_10, GetModuleHandle(NULL), (LPVOID)&ccs);
+		    
+		  	if(g_hMDIClient == NULL)
+				MessageBox(hwnd, "Could not create MDI client.", "Error", MB_OK | MB_ICONERROR);
 			
 			break;
 		}
@@ -39,7 +74,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		case WM_COMMAND:
 			switch(LOWORD(wParam)){
 				case ID_MENU_10:
-					
+					CreateNewMDIChild(g_hMDIClient, "Venda");
 					break;
 				
 				case ID_MENU_11:
@@ -53,14 +88,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			}
 			
 			break;
-		
-		/* Upon destruction, tell the main thread to stop */
-		case WM_DESTROY: {
+		case WM_CLOSE:
+			DestroyWindow(hwnd);
+			break;
+		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
-		}
-		
-		/* All other messages (a lot of them) are processed using default procedures */
 		default:
 			//return DefWindowProc(hwnd, Message, wParam, lParam);
 			return DefFrameProc(hwnd, g_hMDIClient, Message, wParam, lParam);
@@ -68,50 +101,110 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 	return 0;
 }
 
-/* The 'main' function of Win32 GUI programs: this is where execution starts */
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	WNDCLASSEX wc; /* A properties struct of our window */
-	HWND hwnd; /* A 'HANDLE', hence the H, or a pointer to our window */
-	MSG msg; /* A temporary location for all messages */
+LRESULT CALLBACK MDIChildWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch(msg)
+	{
+		case WM_CREATE: {
+			break;
+		}
+		
+		case WM_MDIACTIVATE: {
+			break;
+		}
+		
+		case WM_COMMAND: {
+			break;
+		}
+		case WM_SIZE:{
+			break;
+		}
+		default:
+			return DefMDIChildProc(hwnd, msg, wParam, lParam);
+	
+	}
+	return 0;
+}
 
-	/* zero out the struct and set the stuff we want to modify */
-	memset(&wc,0,sizeof(wc));
+BOOL SetUpMDIChildWindowClass(HINSTANCE hInstance)
+{
+	WNDCLASSEX wc;
+
 	wc.cbSize		 = sizeof(WNDCLASSEX);
-	wc.lpfnWndProc	 = WndProc; /* This is where we will send messages to */
+	wc.style		 = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc	 = MDIChildWndProc;
+	wc.cbClsExtra	 = 0;
+	wc.cbWndExtra	 = 0;
+	wc.hInstance	 = hInstance;
+	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_3DFACE+1);
+	wc.lpszMenuName  = NULL;
+	wc.lpszClassName = g_szChildClassName;
+	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION);
+
+	if(!RegisterClassEx(&wc))
+	{
+		MessageBox(0, "Could Not Register Child Window", "Oh Oh...", MB_ICONEXCLAMATION | MB_OK);
+		return FALSE;
+	}
+	else
+		return TRUE;
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	WNDCLASSEX wc;
+	HWND hwnd;
+	MSG msg;
+	
+	memset(&wc,0,sizeof(wc));
+	
+	wc.cbSize		 = sizeof(WNDCLASSEX);
+	wc.style		 = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc	 = WndProc;
+	wc.cbClsExtra	 = 0;
+	wc.cbWndExtra	 = 0;
 	wc.hInstance	 = hInstance;
 	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
-	
-	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wc.lpszClassName = "WindowClass";
-	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
-	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
+	wc.lpszClassName = g_szClassName;
+	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION);
 
 	if(!RegisterClassEx(&wc)) {
-		MessageBox(NULL, "Window Registration Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);
+		MessageBox(NULL, "Window Registration Failed!","Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Sistema de Venda de Ingresssos",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	if(!SetUpMDIChildWindowClass(hInstance))
+		return 0;
+
+	hwnd = CreateWindowEx(
+		0,
+		g_szClassName,
+		"Sistema de Venda de Ingresssos",
+		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
 		640, /* width */
 		480, /* height */
-		NULL,NULL,hInstance,NULL);
+		NULL, NULL, hInstance, NULL);
 
 	if(hwnd == NULL) {
-		MessageBox(NULL, "Window Creation Failed!","Error!",MB_ICONEXCLAMATION|MB_OK);
+		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
-	/*
-		This is the heart of our program where all input is processed and 
-		sent to WndProc. Note that GetMessage blocks code flow until it receives something, so
-		this loop will not produce unreasonably high CPU usage
-	*/
-	while(GetMessage(&msg, NULL, 0, 0) > 0) { /* If no error is received... */
-		TranslateMessage(&msg); /* Translate key codes to chars if present */
-		DispatchMessage(&msg); /* Send it to WndProc */
+	g_hMainWindow = hwnd;
+	
+	ShowWindow(hwnd, SW_MAXIMIZE);
+	UpdateWindow(hwnd);
+
+	while(GetMessage(&msg, NULL, 0, 0) > 0) {
+		if (!TranslateMDISysAccel(g_hMDIClient, &msg)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 	return msg.wParam;
 }
