@@ -22,6 +22,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			
 			SetMenu(hwnd, hMenu);
 			
+			CLIENTCREATESTRUCT ccs;
+			
+		    ccs.hWindowMenu  = GetSubMenu(GetMenu(hwnd), 2);
+		    ccs.idFirstChild = ID_MDI_FIRSTCHILD;
+			
+		    g_hMDIClient = CreateWindowEx(WS_EX_CLIENTEDGE, "mdiclient", NULL,
+		        WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
+		        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		        hwnd, (HMENU)IDC_MAIN_MDI, GetModuleHandle(NULL), (LPVOID)&ccs);
+			
 			break;
 		}
 		
@@ -52,7 +62,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		
 		/* All other messages (a lot of them) are processed using default procedures */
 		default:
-			return DefWindowProc(hwnd, Message, wParam, lParam);
+			//return DefWindowProc(hwnd, Message, wParam, lParam);
+			return DefFrameProc(hwnd, g_hMDIClient, Message, wParam, lParam);
 	}
 	return 0;
 }
