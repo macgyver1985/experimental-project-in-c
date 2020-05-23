@@ -13,17 +13,36 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			hMenu = CreateMenu();
 			hSubMenuOne = CreatePopupMenu();
 			
-			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_10, "I&niciar Venda");
-			AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
+			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_10, "V&ender");
+			//AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
 			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_11, "C&aixa");
-			AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
+			//AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
 			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_12, "S&air");
-			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenuOne, "V&enda");
+			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenuOne, "I&niciar");
 			
 			SetMenu(hwnd, hMenu);
 			
 			break;
 		}
+		
+		// Trata as ações do menu do sistema
+		case WM_COMMAND:
+			switch(LOWORD(wParam)){
+				case ID_MENU_10:
+					
+					break;
+				
+				case ID_MENU_11:
+					
+					break;
+				
+				case ID_MENU_12:
+					PostMessage(hwnd, WM_CLOSE, 0, 0);
+					break;
+				
+			}
+			
+			break;
 		
 		/* Upon destruction, tell the main thread to stop */
 		case WM_DESTROY: {
