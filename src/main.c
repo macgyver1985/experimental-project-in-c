@@ -4,13 +4,17 @@
 
 const char g_szClassName[] = "myWindowClass";
 const char g_szChildClassName[] = "myMDIChildWindowClass";
-HWND g_hMDIClient = NULL;
 HWND g_hMainWindow = NULL;
+HWND g_hMDIClient = NULL;
+HWND currentMDIChild = NULL;
+HWND hStatus = NULL;
 
 HWND CreateNewMDIChild(HWND hMDIClient, LPCWSTR title)
 {
+	if(currentMDIChild != NULL)
+		DestroyWindow(currentMDIChild);
+	
 	MDICREATESTRUCT mcs;
-	HWND hChild;
 
 	mcs.szTitle = title;
 	mcs.szClass = g_szChildClassName;
@@ -19,18 +23,15 @@ HWND CreateNewMDIChild(HWND hMDIClient, LPCWSTR title)
 	mcs.y = mcs.cy = CW_USEDEFAULT;
 	mcs.style = MDIS_ALLCHILDSTYLES;
 	
-	hChild = (HWND)SendMessage(hMDIClient, WM_MDICREATE, 0, (LONG)&mcs);
+	currentMDIChild = (HWND)SendMessage(hMDIClient, WM_MDICREATE, 0, (LONG)&mcs);
 	
-	ShowWindow(hChild, SW_MAXIMIZE);
-	UpdateWindow(hChild);
+	ShowWindow(currentMDIChild, SW_MAXIMIZE);
+	UpdateWindow(currentMDIChild);
 	
-	if(!hChild)
-	{
-		MessageBox(hMDIClient, "MDI Child creation failed.", "Oh Oh...",
-			MB_ICONEXCLAMATION | MB_OK);
-	}
-	
-	return hChild;
+	if(!currentMDIChild)
+		MessageBox(hMDIClient, "MDI Child creation failed.", "Oh Oh...", MB_ICONEXCLAMATION | MB_OK);
+		
+	return currentMDIChild;
 }
 
 /* This is where all the input to the window goes to */
@@ -39,63 +40,103 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		
 		// Aqui são aplicadas as configuração iniciais da janela no momento da sua criação.
 		case WM_CREATE:{
-			// Constroe e vincula os menus à janela principal.
-			HMENU hMenu, hSubMenuOne;
-			
-			hMenu = CreateMenu();
-			hSubMenuOne = CreatePopupMenu();
-			
-			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_10, "V&ender");
-			//AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
-			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_11, "C&aixa");
-			//AppendMenu(hSubMenuOne, MF_SEPARATOR, -1, "");
-			AppendMenu(hSubMenuOne, MF_STRING, ID_MENU_12, "S&air");
-			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenuOne, "I&niciar");
-			
-			SetMenu(hwnd, hMenu);
-			
+			/*
+				# Constroe e vincula o frame que vai receber as MDIChilds #
+			*/
 			CLIENTCREATESTRUCT ccs;
 			
 		    ccs.hWindowMenu  = GetSubMenu(GetMenu(hwnd), 1);
-		    ccs.idFirstChild = ID_MDI_SALE;
+		    ccs.idFirstChild = ID_MDI_FIRSTCHILD;
 			
-		    g_hMDIClient = CreateWindowEx(WS_EX_CLIENTEDGE, "mdiclient", NULL,
+		    g_hMDIClient = CreateWindowEx(
+				WS_EX_CLIENTEDGE,
+				"mdiclient",
+				NULL,
 		        WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
-		        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		        hwnd, (HMENU)ID_MENU_10, GetModuleHandle(NULL), (LPVOID)&ccs);
+		        CW_USEDEFAULT,
+				CW_USEDEFAULT,
+				CW_USEDEFAULT,
+				CW_USEDEFAULT,
+		        hwnd,
+				(HMENU)ID_MAIN_MDI,
+				GetModuleHandle(NULL),
+				(LPVOID)&ccs);
 		    
 		  	if(g_hMDIClient == NULL)
 				MessageBox(hwnd, "Could not create MDI client.", "Error", MB_OK | MB_ICONERROR);
 			
+			/*
+				# Constroe e vincula a barra de status na janela principal #
+			*/
+			int statwidths[] = {100, -1};
+			hStatus = CreateWindowEx(
+				0,
+				STATUSCLASSNAME,
+				NULL,
+				WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
+				0, 0, 0, 0,
+				hwnd,
+				(HMENU)ID_MAIN_STATUS,
+				GetModuleHandle(NULL),
+				NULL);
+
+			SendMessage(hStatus, SB_SETPARTS, sizeof(statwidths)/sizeof(int), (LPARAM)statwidths);
+			SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)"Hi there :)");
+			
 			break;
 		}
 		
-		// Trata as ações do menu do sistema
+		// Trata as ações que são executadas pelos menus do sistema.
 		case WM_COMMAND:
 			switch(LOWORD(wParam)){
-				case ID_MENU_10:
+				case ID_MENU_SALES:
 					CreateNewMDIChild(g_hMDIClient, "Venda");
 					break;
 				
-				case ID_MENU_11:
-					
+				case ID_MENU_BOX:
+					CreateNewMDIChild(g_hMDIClient, "Caixa");
 					break;
 				
-				case ID_MENU_12:
+				case ID_MENU_CLOSE:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
 					break;
-				
 			}
+			break;
+		
+		// Ajusta a posição dos componentes de acordo com o tamanho da janela.
+		case WM_SIZE:{
+			/*
+				# Ajusta a posição do status bar #
+			*/
+			RECT rcStatus;
+			HWND hStatus = GetDlgItem(hwnd, ID_MAIN_STATUS);
+			SendMessage(hStatus, WM_SIZE, 0, 0);
+			
+			GetWindowRect(hStatus, &rcStatus);
+			int iStatusHeight = rcStatus.bottom - rcStatus.top;
+			
+			/*
+				#  #
+			*/
+			RECT rcClient;
+			GetClientRect(hwnd, &rcClient);
+			int iMDIHeight = rcClient.bottom - iStatusHeight;
+			HWND hMDI = GetDlgItem(hwnd, ID_MAIN_MDI);
+			
+			SetWindowPos(hMDI, NULL, 0, 0, rcClient.right, iMDIHeight, SWP_NOZORDER);
 			
 			break;
+		}
+			
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
 			break;
+			
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
+			
 		default:
-			//return DefWindowProc(hwnd, Message, wParam, lParam);
 			return DefFrameProc(hwnd, g_hMDIClient, Message, wParam, lParam);
 	}
 	return 0;
@@ -167,6 +208,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hInstance	 = hInstance;
 	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.lpszMenuName  = MAKEINTRESOURCE(ID_MENU_ROOT);
 	wc.lpszClassName = g_szClassName;
 	wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hIconSm		 = LoadIcon(NULL, IDI_APPLICATION);
@@ -182,7 +224,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	hwnd = CreateWindowEx(
 		0,
 		g_szClassName,
-		"Sistema de Venda de Ingresssos",
+		"Sistema de Venda de Ingressos",
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */

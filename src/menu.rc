@@ -1,0 +1,13 @@
+#include "resources.h"
+
+ID_MENU_ROOT MENU DISCARDABLE 
+BEGIN
+    POPUP "&Menu"
+    BEGIN
+        MENUITEM "&Venda",                      ID_MENU_SALES
+        MENUITEM SEPARATOR
+        MENUITEM "&Caixa",                      ID_MENU_BOX
+        MENUITEM SEPARATOR
+        MENUITEM "&Sair",                       ID_MENU_CLOSE
+    END
+END
