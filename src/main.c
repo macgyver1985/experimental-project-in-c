@@ -1,38 +1,18 @@
 #include <windows.h>
 #include <commctrl.h>
 #include "resources.h"
+#include "crossCutting.h"
+#include "viewSales.h"
 
+/*
+	Váriáveis globais do sistema
+*/
 const char g_szClassName[] = "myWindowClass";
 const char g_szChildClassName[] = "myMDIChildWindowClass";
+int menuActive;
 HWND g_hMainWindow = NULL;
 HWND g_hMDIClient = NULL;
-HWND currentMDIChild = NULL;
 HWND hStatus = NULL;
-
-HWND CreateNewMDIChild(HWND hMDIClient, LPCWSTR title)
-{
-	if(currentMDIChild != NULL)
-		DestroyWindow(currentMDIChild);
-	
-	MDICREATESTRUCT mcs;
-
-	mcs.szTitle = title;
-	mcs.szClass = g_szChildClassName;
-	mcs.hOwner  = GetModuleHandle(NULL);
-	mcs.x = mcs.cx = CW_USEDEFAULT;
-	mcs.y = mcs.cy = CW_USEDEFAULT;
-	mcs.style = MDIS_ALLCHILDSTYLES;
-	
-	currentMDIChild = (HWND)SendMessage(hMDIClient, WM_MDICREATE, 0, (LONG)&mcs);
-	
-	ShowWindow(currentMDIChild, SW_MAXIMIZE);
-	UpdateWindow(currentMDIChild);
-	
-	if(!currentMDIChild)
-		MessageBox(hMDIClient, "MDI Child creation failed.", "Oh Oh...", MB_ICONEXCLAMATION | MB_OK);
-		
-	return currentMDIChild;
-}
 
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
@@ -68,7 +48,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			/*
 				# Constroe e vincula a barra de status na janela principal #
 			*/
-			int statwidths[] = {100, -1};
+			int statwidths[] = { -1 };
 			hStatus = CreateWindowEx(
 				0,
 				STATUSCLASSNAME,
@@ -81,26 +61,37 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 				NULL);
 
 			SendMessage(hStatus, SB_SETPARTS, sizeof(statwidths)/sizeof(int), (LPARAM)statwidths);
-			SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)"Hi there :)");
+			SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Bem vindo ao sistema de venda de ingressos!");
 			
 			break;
 		}
 		
 		// Trata as ações que são executadas pelos menus do sistema.
 		case WM_COMMAND:
+			menuActive = LOWORD(wParam);
+			HWND hStatus = GetDlgItem(hwnd, ID_MAIN_STATUS);
+			
 			switch(LOWORD(wParam)){
 				case ID_MENU_SALES:
-					CreateNewMDIChild(g_hMDIClient, "Venda");
+					CreateNewMDIChild(g_hMDIClient, "Venda", g_szChildClassName);
+					
+					SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Função de venda carregada com sucesso.");
+					
 					break;
 				
 				case ID_MENU_BOX:
-					CreateNewMDIChild(g_hMDIClient, "Caixa");
+					CreateNewMDIChild(g_hMDIClient, "Caixa", g_szChildClassName);
+					
+					SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Função do caixa carregado com sucesso.");
+					
 					break;
 				
 				case ID_MENU_CLOSE:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
+					
 					break;
 			}
+			
 			break;
 		
 		// Ajusta a posição dos componentes de acordo com o tamanho da janela.
@@ -116,7 +107,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			int iStatusHeight = rcStatus.bottom - rcStatus.top;
 			
 			/*
-				#  #
+				# Ajust a posição do frame MDIChild #
 			*/
 			RECT rcClient;
 			GetClientRect(hwnd, &rcClient);
@@ -130,40 +121,33 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
+			
 			break;
 			
 		case WM_DESTROY:
 			PostQuitMessage(0);
+			
 			break;
 			
 		default:
 			return DefFrameProc(hwnd, g_hMDIClient, Message, wParam, lParam);
 	}
+	
 	return 0;
 }
 
 LRESULT CALLBACK MDIChildWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch(msg)
-	{
-		case WM_CREATE: {
+	switch(menuActive){
+		case ID_MENU_SALES:
+			return SalesWndProc(g_hMainWindow, menuActive, hwnd, msg, wParam, lParam);
+			
 			break;
-		}
-		
-		case WM_MDIACTIVATE: {
-			break;
-		}
-		
-		case WM_COMMAND: {
-			break;
-		}
-		case WM_SIZE:{
-			break;
-		}
+			
 		default:
 			return DefMDIChildProc(hwnd, msg, wParam, lParam);
-	
 	}
+	
 	return 0;
 }
 
@@ -187,6 +171,7 @@ BOOL SetUpMDIChildWindowClass(HINSTANCE hInstance)
 	if(!RegisterClassEx(&wc))
 	{
 		MessageBox(0, "Could Not Register Child Window", "Oh Oh...", MB_ICONEXCLAMATION | MB_OK);
+		
 		return FALSE;
 	}
 	else
@@ -215,6 +200,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if(!RegisterClassEx(&wc)) {
 		MessageBox(NULL, "Window Registration Failed!","Error!", MB_ICONEXCLAMATION | MB_OK);
+		
 		return 0;
 	}
 
@@ -234,6 +220,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if(hwnd == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		
 		return 0;
 	}
 
@@ -248,5 +235,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DispatchMessage(&msg);
 		}
 	}
+	
 	return msg.wParam;
 }
