@@ -2,12 +2,6 @@
 #include "resources.h"
 #include "crossCutting.h"
 
-const char eventos[9][30] = {
-    "Mercury", "Venus", "Terra", "Mars",
-    "Jupiter", "Saturn", "Uranus", "Neptune",
-    "Pluto??"
-};
-
 LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
@@ -26,9 +20,18 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 			AddRadioButton(hwnd, ID_FORM_VENDA_RAD_2, "Professor", 290, 150, 100, 20);
 			
 			AddLabel(hwnd, ID_FORM_VENDA_LB_4, "Selecione a atração:", 50, 200, 150, 20);
-			AddComboBox(hwnd, ID_FORM_VENDA_CB_1, 250, 200, 300, 100, eventos);
 			
-			CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_2, NULL);
+			Columns cols[1];
+			
+			strcpy(cols[0].Name, "Peça");
+			cols[0].Width = 100;
+			
+			strcpy(cols[1].Name, "Valor");
+			cols[1].Width = 100;
+			
+			AddListView(hwnd, ID_FORM_VENDA_LV_1, 250, 200, 300, 100, cols);
+			
+			CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_2, -1);
 			
 			break;
 		}
@@ -58,6 +61,9 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 					break;
 			}
 			
+			break;
+		}
+		case LVIS_SELECTED: {
 			break;
 		}
 		case WM_KEYDOWN: {

@@ -26,7 +26,7 @@
 #define ID_FORM_VENDA_RAD_1			3006
 #define ID_FORM_VENDA_RAD_2			3007
 #define ID_FORM_VENDA_LB_4			3008
-#define ID_FORM_VENDA_CB_1			3009
+#define ID_FORM_VENDA_LV_1			3009
 /*
 	Constantes 
 */
