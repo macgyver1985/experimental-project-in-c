@@ -203,7 +203,7 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
 	 	WS_EX_WINDOWEDGE,
 		WC_LISTVIEW,
 		NULL,
-		WS_CHILD | WS_VISIBLE | LVS_REPORT | WS_BORDER,
+		WS_VISIBLE | WS_CHILD | WS_BORDER | LVS_REPORT | LVS_SINGLESEL,
 		x, y,
 		width, height,
 		context,
@@ -218,7 +218,7 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
 		return 0;
 	}
 	
-	ListView_SetExtendedListViewStyle(input, LVS_EX_CHECKBOXES);
+	ListView_SetExtendedListViewStyle(input, LVS_EX_FULLROWSELECT);
 	
 	LVCOLUMN lvc = { 0 };
     LVITEM lv = { 0 };
@@ -229,32 +229,24 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
     if(sizeof(cols)/sizeof(int) > 0) {
     	int cCol;
     	
-    	lvc.iSubItem = 0;
-	    lvc.cx = 20;
-	    lvc.pszText = NULL;
-	    ListView_InsertColumn(input, 0, &lvc);
-    	
     	for(cCol = 0; cCol < sizeof(cols)/sizeof(int); cCol += 1) {
-    		lvc.iSubItem = cCol + 1;
+    		lvc.iSubItem = cCol;
     		lvc.cx = cols[cCol].Width;
     		lvc.pszText = TEXT(cols[cCol].Name);
-    		ListView_InsertColumn(input, cCol + 1, &lvc);
+    		ListView_InsertColumn(input, cCol, &lvc);
 		}
 	}
 	
     /* Add some rows. */
     lv.iItem = 0;
     ListView_InsertItem(input, &lv);
-    ListView_SetItemText(input, 0, 1, TEXT("Friends"));
-    ListView_SetItemText(input, 0, 2, TEXT("500"));
-    ListView_SetCheckState(input, 0, FALSE);
-// 	
-//    lv.iItem = 1;
-//    ListView_InsertItem(input, &lv);
-//    ListView_SetItemText(input, 1, 1, TEXT("Survivor"));
-//    ListView_SetItemText(input, 1, 2, TEXT("970,000"));
-//    ListView_SetItemText(input, 1, 3, TEXT("Please, not again"));
-//    ListView_SetCheckState(input, 1, FALSE);
+    ListView_SetItemText(input, 0, 0, TEXT("Friends"));
+    ListView_SetItemText(input, 0, 1, TEXT("500"));
+ 	
+    lv.iItem = 1;
+    ListView_InsertItem(input, &lv);
+    ListView_SetItemText(input, 1, 0, TEXT("Survivor"));
+    ListView_SetItemText(input, 1, 1, TEXT("970,000"));
 	
 	return input;
 }

@@ -4,6 +4,8 @@
 
 LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	int t[] = { 1, 2, 3 };
+	
 	switch(msg)
 	{
 		case WM_CREATE: {
@@ -55,15 +57,29 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 			switch(LOWORD(wParam)) {
 				case ID_FORM_VENDA_RAD_1:
 					CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_2, ID_FORM_VENDA_RAD_1);
+					
 					break;
 				case ID_FORM_VENDA_RAD_2:
 					CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_2, ID_FORM_VENDA_RAD_2);
+					
 					break;
 			}
 			
 			break;
 		}
-		case LVIS_SELECTED: {
+		case WM_NOTIFY: {
+			HWND hListView = GetDlgItem(hwnd, ID_FORM_VENDA_LV_1);
+			NMHDR* header = (NMHDR*)lParam;
+	        NMLISTVIEW* nmlist = (NMLISTVIEW*)lParam;
+	        
+	        if (header->hwndFrom == hListView && header->code == LVN_ITEMCHANGED)
+	        {
+	            if (nmlist->uNewState & LVIS_SELECTED)
+				{
+					MessageBox(hwnd, "Selecionado", "", MB_OK);
+	            }
+	        }
+	        
 			break;
 		}
 		case WM_KEYDOWN: {
