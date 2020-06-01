@@ -1,7 +1,8 @@
 #include <windows.h>
 #include <commctrl.h>
 #include "resources.h"
-#include "crossCutting.h"
+#include "util.h"
+#include "database.h"
 #include "viewSales.h"
 
 /*
@@ -63,6 +64,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			SendMessage(hStatus, SB_SETPARTS, sizeof(statwidths)/sizeof(int), (LPARAM)statwidths);
 			SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Bem vindo ao sistema de venda de ingressos!");
 			
+			/*
+				# Carrega os dados que serão usados no sistema #
+			*/
+			LoadDataBase();
+			
 			break;
 		}
 		
@@ -101,16 +107,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			*/
 			RECT rcStatus;
 			HWND hStatus = GetDlgItem(hwnd, ID_MAIN_STATUS);
+			
 			SendMessage(hStatus, WM_SIZE, 0, 0);
-			
 			GetWindowRect(hStatus, &rcStatus);
-			int iStatusHeight = rcStatus.bottom - rcStatus.top;
 			
+			int iStatusHeight = rcStatus.bottom - rcStatus.top;
 			/*
 				# Ajust a posição do frame MDIChild #
 			*/
 			RECT rcClient;
+			
 			GetClientRect(hwnd, &rcClient);
+			
 			int iMDIHeight = rcClient.bottom - iStatusHeight;
 			HWND hMDI = GetDlgItem(hwnd, ID_MAIN_MDI);
 			

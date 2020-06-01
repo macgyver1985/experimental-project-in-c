@@ -1,11 +1,10 @@
 #include <windows.h>
 #include "resources.h"
-#include "crossCutting.h"
+#include "util.h"
+#include "database.h"
 
 LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	int t[] = { 1, 2, 3 };
-	
 	switch(msg)
 	{
 		case WM_CREATE: {
@@ -19,11 +18,12 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 			
 			AddLabel(hwnd, ID_FORM_VENDA_LB_3, "Meia entrada para:", 50, 150, 130, 20);
 			AddRadioButton(hwnd, ID_FORM_VENDA_RAD_1, "Estudante", 190, 150, 100, 20);
-			AddRadioButton(hwnd, ID_FORM_VENDA_RAD_2, "Professor", 290, 150, 100, 20);
+			AddRadioButton(hwnd, ID_FORM_VENDA_RAD_2, "Estudante Carente", 290, 150, 150, 20);
+			AddRadioButton(hwnd, ID_FORM_VENDA_RAD_3, "Professor", 440, 150, 100, 20);
 			
 			AddLabel(hwnd, ID_FORM_VENDA_LB_4, "Selecione a atração:", 50, 200, 150, 20);
 			
-			Columns cols[1];
+			Columns cols[6];
 			
 			strcpy(cols[0].Name, "Peça");
 			cols[0].Width = 100;
@@ -31,13 +31,28 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 			strcpy(cols[1].Name, "Valor");
 			cols[1].Width = 100;
 			
-			AddListView(hwnd, ID_FORM_VENDA_LV_1, 250, 200, 300, 100, cols);
+			strcpy(cols[2].Name, "Num. Vagas");
+			cols[2].Width = 100;
 			
-			CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_2, -1);
+			strcpy(cols[3].Name, "Data");
+			cols[3].Width = 100;
+			
+			strcpy(cols[4].Name, "Inicio");
+			cols[4].Width = 100;
+			
+			strcpy(cols[5].Name, "Fim");
+			cols[5].Width = 100;
+			
+			DisplayInListView(
+				AddListView(hwnd, ID_FORM_VENDA_LV_1, 50, 250, 600, 130, cols, 6),
+				theaters,
+				6
+			);
+			
+			CheckRadioButton(hwnd, ID_FORM_VENDA_RAD_1, ID_FORM_VENDA_RAD_3, -1);
 			
 			break;
 		}
-		
 		case WM_MDIACTIVATE: {
 			HMENU hMenu, hSubMenu;
 			
@@ -52,7 +67,6 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 			
 			break;
 		}
-		
 		case WM_COMMAND: {
 			switch(LOWORD(wParam)) {
 				case ID_FORM_VENDA_RAD_1:
@@ -76,7 +90,7 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 	        {
 	            if (nmlist->uNewState & LVIS_SELECTED)
 				{
-					MessageBox(hwnd, "Selecionado", "", MB_OK);
+					//MessageBox(hwnd, "Selecionado", "", MB_OK);
 	            }
 	        }
 	        
@@ -90,7 +104,6 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, int menuActive, HWND hwnd, UINT m
 		}
 		default:
 			return DefMDIChildProc(hwnd, msg, wParam, lParam);
-	
 	}
 	
 	return 0;

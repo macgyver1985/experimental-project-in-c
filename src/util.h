@@ -4,7 +4,14 @@
 
 #ifndef functionsHelper
 #define functionsHelper
+
 HWND currentMDIChild = NULL;
+
+typedef struct
+{
+	int Width;
+	char Name[20];
+} Columns;
 
 /*
 	Função para construção das janelas que serão abertas dentro da MIDChild.
@@ -188,16 +195,10 @@ HWND AddListBox(HWND context, int id, int x, int y, int width, int height, int s
 	return input;
 }
 
-typedef struct
-{
-	int Width;
-	char Name[20];
-} Columns;
-
 /*
 	Função que adiciona um listView na tela.
 */
-HWND AddListView(HWND context, int id, int x, int y, int width, int height, Columns cols[])
+HWND AddListView(HWND context, int id, int x, int y, int width, int height, Columns cols[], int numCol)
 {
 	HWND input = CreateWindowEx(
 	 	WS_EX_WINDOWEDGE,
@@ -221,7 +222,6 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
 	ListView_SetExtendedListViewStyle(input, LVS_EX_FULLROWSELECT);
 	
 	LVCOLUMN lvc = { 0 };
-    LVITEM lv = { 0 };
 	
 	lvc.mask = LVCF_TEXT | LVCF_SUBITEM | LVCF_WIDTH | LVCF_FMT;
     lvc.fmt = LVCFMT_LEFT;
@@ -229,7 +229,7 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
     if(sizeof(cols)/sizeof(int) > 0) {
     	int cCol;
     	
-    	for(cCol = 0; cCol < sizeof(cols)/sizeof(int); cCol += 1) {
+    	for(cCol = 0; cCol < numCol; cCol += 1) {
     		lvc.iSubItem = cCol;
     		lvc.cx = cols[cCol].Width;
     		lvc.pszText = TEXT(cols[cCol].Name);
@@ -237,17 +237,7 @@ HWND AddListView(HWND context, int id, int x, int y, int width, int height, Colu
 		}
 	}
 	
-    /* Add some rows. */
-    lv.iItem = 0;
-    ListView_InsertItem(input, &lv);
-    ListView_SetItemText(input, 0, 0, TEXT("Friends"));
-    ListView_SetItemText(input, 0, 1, TEXT("500"));
- 	
-    lv.iItem = 1;
-    ListView_InsertItem(input, &lv);
-    ListView_SetItemText(input, 1, 0, TEXT("Survivor"));
-    ListView_SetItemText(input, 1, 1, TEXT("970,000"));
-	
 	return input;
 }
+
 #endif
