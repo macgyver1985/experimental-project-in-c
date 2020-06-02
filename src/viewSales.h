@@ -14,6 +14,9 @@ LRESULT CALLBACK SalesWndProc(HWND mainWindow, HWND midClient, HWND hwnd, UINT m
 	switch(msg)
 	{
 		case WM_CREATE: {
+			halfEntry = 0;
+			showSelected = -1;
+			
 			AddLabel(hwnd, ID_FORM_VENDA_INFO, "Informe os dados do cliente e selecione o evento.", 50, 50, 400, 20);
 			
 			AddLabel(hwnd, ID_FORM_VENDA_LB_1, "Nome do Cliente: ", 50, 100, 120, 20);

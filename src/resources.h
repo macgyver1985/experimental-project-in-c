@@ -182,38 +182,29 @@ Ticket CreateTicket(char *clientName, char *year, int halfEntry, TheaterShow *th
 	return result;
 }
 
-void DisplayTicketsInListView(HWND listView, Ticket tickets[], int numTheater) {
+void DisplayTicketsInListView(HWND listView, Ticket tickets[], int num) {
 	int i;
 	LVITEM lv = { 0 };
 	
-	for(i = 0; i < numTheater; i += 1) {
+	for(i = 0; i < num; i += 1) {
+		if(tickets[i].IsSold == FALSE) {
+			break;
+		}
+		
 		lv.iItem = i;
+		ListView_InsertItem(listView, &lv);
+		ListView_SetItemText(listView, i, 0, TEXT(tickets[i].ClientName));
+		ListView_SetItemText(listView, i, 1, TEXT(tickets[i].TheaterName));
 		
 		char vl[5];
-		snprintf(vl, sizeof vl, "%f", theater[i].Value);
+		snprintf(vl, sizeof vl, "%f", tickets[i].OriginalValue);
 		
-		int count, ii;
-		
-		for(ii = 0; ii < 20; ii += 1) {
-			if(theater[i].Places[ii].IsAvalible == FALSE) {
-				count += 1;
-			}
-		}
-		
-		char qt[2];
-		snprintf(qt, sizeof qt, "%d", count);
-		
-		if(count > 0) {
-			ListView_InsertItem(listView, &lv);
-		    ListView_SetItemText(listView, i, 0, TEXT(theater[i].Name));
-		    ListView_SetItemText(listView, i, 1, TEXT(vl));
-		    ListView_SetItemText(listView, i, 2, TEXT(qt));
-		    ListView_SetItemText(listView, i, 3, TEXT(theater[i].Date));
-		    ListView_SetItemText(listView, i, 5, TEXT(theater[i].End));
-		    ListView_SetItemText(listView, i, 4, TEXT(theater[i].Start));
-		}
-		
-		count = 0;
+	    ListView_SetItemText(listView, i, 2, TEXT(vl));
+	    ListView_SetItemText(listView, i, 3, TEXT(tickets[i].Discount));
+	    
+	    snprintf(vl, sizeof vl, "%f", tickets[i].Value);
+	    
+	    ListView_SetItemText(listView, i, 4, TEXT(vl));
 	}
 }
 
