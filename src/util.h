@@ -5,6 +5,9 @@
 #ifndef functionsHelper
 #define functionsHelper
 
+const char g_szClassName[] = "myWindowClass";
+const char g_szChildClassName[] = "myMDIChildWindowClass";
+int menuActive;
 HWND currentMDIChild = NULL;
 
 typedef struct
@@ -19,7 +22,7 @@ typedef struct
 HWND CreateNewMDIChild(HWND hMDIClient, char *title, const char *className)
 {
 	if(currentMDIChild != NULL)
-		DestroyWindow(currentMDIChild);
+		PostMessage(currentMDIChild, WM_CLOSE, 0, 0);
 	
 	MDICREATESTRUCT mcs;
 
@@ -39,6 +42,33 @@ HWND CreateNewMDIChild(HWND hMDIClient, char *title, const char *className)
 		MessageBox(hMDIClient, "MDI Child creation failed.", "Oh Oh...", MB_ICONEXCLAMATION | MB_OK);
 		
 	return currentMDIChild;
+}
+
+/*
+	Função que adiciona um label na tela.
+*/
+HWND AddButton(HWND context, int id, char *text, int x, int y, int width, int height)
+{
+	HWND input = CreateWindowEx(
+	 	WS_EX_WINDOWEDGE,
+		"BUTTON",
+		text,
+		WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
+		x, y,
+		width, height,
+		context,
+		(HMENU)id,
+		GetModuleHandle(NULL),
+		NULL);
+		
+	if(input == NULL)
+	{
+		MessageBox(context, "Could not create control.", "Error", MB_OK | MB_ICONERROR);
+		
+		return 0;
+	}
+	
+	return input;
 }
 
 /*

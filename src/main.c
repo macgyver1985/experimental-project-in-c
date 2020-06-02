@@ -4,16 +4,14 @@
 #include "util.h"
 #include "database.h"
 #include "viewSales.h"
+#include "viewPurchase.h"
+#include "viewBox.h"
 
 /*
 	Váriáveis globais do sistema
 */
-const char g_szClassName[] = "myWindowClass";
-const char g_szChildClassName[] = "myMDIChildWindowClass";
-int menuActive;
 HWND g_hMainWindow = NULL;
 HWND g_hMDIClient = NULL;
-HWND hStatus = NULL;
 
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
@@ -50,7 +48,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 				# Constroe e vincula a barra de status na janela principal #
 			*/
 			int statwidths[] = { -1 };
-			hStatus = CreateWindowEx(
+			HWND hStatus = CreateWindowEx(
 				0,
 				STATUSCLASSNAME,
 				NULL,
@@ -75,20 +73,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		// Trata as ações que são executadas pelos menus do sistema.
 		case WM_COMMAND:
 			menuActive = LOWORD(wParam);
-			HWND hStatus = GetDlgItem(hwnd, ID_MAIN_STATUS);
+			
 			
 			switch(LOWORD(wParam)){
 				case ID_MENU_SALES:
 					CreateNewMDIChild(g_hMDIClient, "Venda", g_szChildClassName);
 					
-					SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Função de venda carregada com sucesso.");
-					
 					break;
 				
 				case ID_MENU_BOX:
 					CreateNewMDIChild(g_hMDIClient, "Caixa", g_szChildClassName);
-					
-					SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"Função do caixa carregado com sucesso.");
 					
 					break;
 				
@@ -148,7 +142,17 @@ LRESULT CALLBACK MDIChildWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 {
 	switch(menuActive){
 		case ID_MENU_SALES:
-			return SalesWndProc(g_hMainWindow, menuActive, hwnd, msg, wParam, lParam);
+			return SalesWndProc(g_hMainWindow, g_hMDIClient, hwnd, msg, wParam, lParam);
+			
+			break;
+		
+		case ID_MENU_PURCHASE:
+			return PurchaseWndProc(g_hMainWindow, g_hMDIClient, hwnd, msg, wParam, lParam);
+			
+			break;
+		
+		case ID_MENU_BOX:
+			return BoxWndProc(g_hMainWindow, g_hMDIClient, hwnd, msg, wParam, lParam);
 			
 			break;
 			
