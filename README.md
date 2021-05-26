@@ -4,9 +4,9 @@
 
   - [1 INTRODUÇÃO](#1-INTRODUÇÃO)
   - [2 DESENVOLVIMENTO](#2-DESENVOLVIMENTO)
-    - [2.1 Necessidade de Negócio](#2.1-Necessidade-de-Negócio)
-    - [2.2 Proposta Técnica](#2.2-Proposta-Técnica)
-    - [2.3 Produção da Aplicação](#2.3-Produção-da-Aplicação)
+    - [2.1 Necessidade de Negócio](#2_1-Necessidade-de-Negócio)
+    - [2.2 Proposta Técnica](#22-Proposta-Técnica)
+    - [2.3 Produção da Aplicação](#2-3-Produção-da-Aplicação)
   - [3 GLOSSÁRIO](#3-GLOSSÁRIO)
   - [REFERÊNCIAS](#REFERÊNCIAS)
 
