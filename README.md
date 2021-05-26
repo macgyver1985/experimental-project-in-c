@@ -3,12 +3,12 @@
 ## Indice
 
   - [1 INTRODUÇÃO](#1-INTRODUÇÃO)
-  - [2 DESENVOLVIMENTO](#requisitos-funcionais)
-    - [2.1 Necessidade de Negócio](#requisitos-não-funcionais)
-    - [2.2 Proposta Técnica](#propósta-técnica)
-    - [2.3 Produção da Aplicação](#detalhamento-da-solução)
-  - [3 GLOSSÁRIO](#configurando-ambientes)
-  - [REFERÊNCIAS](#executando-aplicação)
+  - [2 DESENVOLVIMENTO](#2-DESENVOLVIMENTO)
+    - [2.1 Necessidade de Negócio](#2.1-Necessidade-de-Negócio)
+    - [2.2 Proposta Técnica](#2.2-Proposta-Técnica)
+    - [2.3 Produção da Aplicação](#2.3-Produção-da-Aplicação)
+  - [3 GLOSSÁRIO](#3-GLOSSÁRIO)
+  - [REFERÊNCIAS](#REFERÊNCIAS)
 
 ## 1 INTRODUÇÃO
 Com o intuito de aplicar alguns conhecimentos adiquiridos em C, foi proposta uma necessidade fictícia da construção de um software para venda de ingressos de teatro. A proposta em questão já contém as premissas que devem ser seguidas para atender a necessidade de negócio bem como algumas definições técnicas, tais como a linguagem de programação e a IDE de desenvolvimento que deve ser utilizada.
@@ -129,25 +129,25 @@ Abaixo seguem as imagens que descrevem como serão as interfaces da aplicação.
 
 Figura 1 - Tela inicial do sistema
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_1.jpg" alt="Tela 1" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_1.jpg" alt="Tela 1" width="600">
 
 Fonte: Autor, 2020
 
 Figura 2 - Tela do módulo de vendas
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_2.jpg" alt="Tela 2" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_2.jpg" alt="Tela 2" width="600">
 
 Fonte: Autor, 2020
 
 Figura 3 - Tela do módulo do comprovante de compra
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_3.jpg" alt="Tela 3" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_3.jpg" alt="Tela 3" width="600">
 
 Fonte: Autor, 2020
 
 Figura 4 - Tela do módulo do fluxo de caixa
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_4.jpg" alt="Tela 4" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_4.jpg" alt="Tela 4" width="600">
 
 Fonte: Autor, 2020
 
@@ -157,7 +157,7 @@ Todo desenvolvimento foi feito por meio da IDE Dev C++, abaixo figura 5 que most
 
 Figura 5 - Organização da solução
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders.jpg" alt="Solução" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders.jpg" alt="Solução" width="600">
 
 Fonte: Autor, 2020
 
@@ -178,7 +178,7 @@ Aqui vamos descrever a estrutura de pastas da aplicação. Veja a figura 6 e as 
 
 Figura 6 - Estrutura de pastas da solução
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders_2.jpg" alt="Estrutura de Pastas" width="800">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders_2.jpg" alt="Estrutura de Pastas" width="600">
 
 Fonte: Autor, 2020
 
