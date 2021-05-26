@@ -177,21 +177,7 @@ Agora vamos entender a estrutura:
 - dist: Pasta onde fica o executável que é gerado. É aqui que fica a versão de distribuição da aplicação, ou seja, para executá-la basta executar o arquivo TicketSales.exe existente dentro dessa pasta.
 - src: É aqui que ficam os arquivos fontes da aplicação.
 
-# 3 CONCLUSÃO
-
-Nesse projeto, utilizamos o aprendizado das disciplinas Linguagem e Técnicas de Programação e Engenharia de Software I.
-
-O objetivo foi criar um sistema de venda de ingressos de teatro com o propósito de fomentar e desenvolver a lógica de programação, colocar em prática o uso dos processos da engenharia de software e desenvolver a capacidade de identificar as necessidades e propor soluções.
-
-Para isso foram estipuladas previamente as regras de negócio, tais como a aplicação de descontos e as funcionalidades principais. O desafio foi compreender claramente os requisitos, selecionar o melhor modelo de ciclo de vida e organizar adequadamente a aplicação no que diz respeito a codificação.
-
-Todo o desenvolvimento proporcionou um aumento substancial nos conhecimentos em relação a linguagem de programação C e aos processos da engenharia de software.
-
-Toda elaboração do trabalho foi feita com base no escopo do projeto, onde tratei com clareza todos os processos necessários para a criação e desenvolvimento do software.
-
-Foi possível dentro do conteúdo estudado relacionar as matérias envolvidas, elaborando um software que atende as necessidades de negócio para venda de ingressos de teatro.
-
-# 4 GLOSSÁRIO
+# 3 GLOSSÁRIO
 
 Figma: Ferramenta WEB usada para construção de protótipos de telas.
 
