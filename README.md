@@ -31,7 +31,7 @@ O fluxo de venda inicia-se quando o módulo de vendas for acessado, o sistema so
 
 Abaixo vamos descrever cada um dos módulos e suas regras de negócio.
 
-Módulo de Venda
+##### Módulo de Venda
 
 Como o nome já diz é aqui que as vendas ocorrerão. A tela desse módulo deverá solicitar o nome do cliente, idade, motivo de meia entrada, opções de espetáculo para serem escolhidos e os assentos disponíveis. Após a confirmação da compra o sistema direciona para o módulo de comprovante da compra.
 
@@ -78,7 +78,7 @@ Para atender a necessidade de negócio, foi definido que o modelo de gestão do 
 
 Na perspectiva do desenvolvimento ou codificação será usada a linguagem C por meio da IDE Dev C++. Será produzida uma aplicação Windows Application, ou seja, um software que será executado somente em ambiente Windows por meio de interfaces gráficas.
 
-Modelo de Ciclo de Vida Incremental
+##### Modelo de Ciclo de Vida Incremental
 
 Neste modelo de ciclo de vida a construção da aplicação é dividida em pequenas partes onde o modelo cascata é aplicado a cada incremento.
 
@@ -178,7 +178,7 @@ Aqui vamos descrever a estrutura de pastas da aplicação. Veja a figura 6 e as 
 
 Figura 6 - Estrutura de pastas da solução
 
-<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders_2.jpg" alt="Estrutura de Pastas" width="600">
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders_2.jpg" alt="Estrutura de Pastas" width="500">
 
 Fonte: Autor, 2020
 
