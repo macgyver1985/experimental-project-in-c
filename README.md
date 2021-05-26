@@ -60,13 +60,13 @@ Tabela 2 - Regras de validação do módulo de venda
 
 Fonte: Autor, 2020
 
-Módulo de Comprovante de Compra
+##### Módulo de Comprovante de Compra
 
 Esse módulo deve ser executado automaticamente após a conclusão de uma venda, ou seja, ele deve exibir o comprovante de compra do ingresso da peça teatral.
 
 As informações que devem ser exibidas são a data e hora do espetáculo, nome da peça teatral, código do assento selecionado, valor pago e o desconto caso haja.
 
-Módulo de Fluxo de Caixa
+##### Módulo de Fluxo de Caixa
 
 Esse módulo não faz parte do fluxo da venda, mas pode ser acessado a qualquer momento pelo atendente para verificar as vendas que foram efetuadas.
 
@@ -107,15 +107,15 @@ As vantagens de se usar esse modelo de gestão são:
 
 Agora vamos descrever quais serão os incrementos envolvidos na produção do software.
 
-Primeiro Incremento
+##### Primeiro Incremento
 
 No primeiro incremento serão produzidos os protótipos de todas as funcionalidades, também será produzida a janela principal contendo o menu e barra de status, bem como o módulo de venda dos ingressos.
 
-Segundo Incremento
+##### Segundo Incremento
 
 No segundo incremento será produzido o módulo de comprovante de pagamento e o mesmo será incorporado ao processo de venda, de modo que assim que a venda for finalizada a tela do comprovante será apresentada.
 
-Terceiro Incremento
+##### Terceiro Incremento
 
 No terceiro incremento será produzido o fluxo de caixa de modo que o mesmo poderá ser acessado a qualquer momento para verificar as vendas que foram efetuadas e o total arrecadado.
 
