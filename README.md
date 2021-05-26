@@ -1,4 +1,16 @@
-# 1 INTRODUÇÃO
+# API EXPERIMENTAL-PROJECT-IN-C
+
+## Indice
+
+  - [1 INTRODUÇÃO](#1-INTRODUÇÃO)
+  - [2 DESENVOLVIMENTO](#requisitos-funcionais)
+    - [2.1 Necessidade de Negócio](#requisitos-não-funcionais)
+    - [2.2 Proposta Técnica](#propósta-técnica)
+    - [2.3 Produção da Aplicação](#detalhamento-da-solução)
+  - [3 GLOSSÁRIO](#configurando-ambientes)
+  - [REFERÊNCIAS](#executando-aplicação)
+
+## 1 INTRODUÇÃO
 Com o intuito de aplicar alguns conhecimentos adiquiridos em C, foi proposta uma necessidade fictícia da construção de um software para venda de ingressos de teatro. A proposta em questão já contém as premissas que devem ser seguidas para atender a necessidade de negócio bem como algumas definições técnicas, tais como a linguagem de programação e a IDE de desenvolvimento que deve ser utilizada.
 
 Para gestão do desenvolvimento foi selecionado o modelo incremental por proporcionar uma entrega faseada da aplicação e uma melhor qualidade nas funcionalidades entregues em cada etapa, visto que os incrementos são testados de forma mais especifica a cada fim de incremento.
@@ -7,11 +19,11 @@ Para a prototipação das telas foi utilizada a ferramenta online Figma, já no 
 
 O paradigma de desenvolvimento foi o de linguagens estruturadas, visto que a linguagem C segue esse paradigma.
 
-# 2 DESENVOLVIMENTO
+## 2 DESENVOLVIMENTO
 
 Nesta sessão vamos descrever todo o processo do desenvolvimento do software, desde as necessidades de negócio até o detalhamento da solução técnica que foi entregue.
 
-## 2.1 Necessidade de Negócio
+### 2.1 Necessidade de Negócio
 
 Foi solicitada a construção de um software para venda de ingressos de teatro, tal sistema será composto pelos módulos de venda, comprovante de compra e fluxo de caixa.
 
@@ -60,7 +72,7 @@ Esse módulo não faz parte do fluxo da venda, mas pode ser acessado a qualquer 
 
 Nessa tela deverão ser exibidas todas as vendas realizadas no dia, em uma lista contendo o nome do cliente, nome da peça teatral, valor do ingresso, percentual de desconto, valor pago. No fim dessa lista deve haver um totalizador que mostra o total arrecadado.
 
-## 2.2 Proposta Técnica
+### 2.2 Proposta Técnica
 
 Para atender a necessidade de negócio, foi definido que o modelo de gestão do projeto será o incremental, ou seja, todo o processo de desenvolvimento será dividido em três incrementos, onde cada incremento corresponde a uma funcionalidade que será entregue até que todo o software esteja completo.
 
@@ -107,7 +119,7 @@ Terceiro Incremento
 
 No terceiro incremento será produzido o fluxo de caixa de modo que o mesmo poderá ser acessado a qualquer momento para verificar as vendas que foram efetuadas e o total arrecadado.
 
-## 2.3 Produção da Aplicação
+### 2.3 Produção da Aplicação
 
 Aqui vamos demonstrar algumas características da aplicação, tais como os protótipos de tela, estrutura da solução e como o código foi organizado.
 
@@ -117,25 +129,25 @@ Abaixo seguem as imagens que descrevem como serão as interfaces da aplicação.
 
 Figura 1 - Tela inicial do sistema
 
-![](RackMultipart20210526-4-1ghzx9z_html_fbb7cc372ed10fe2.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_1.jpg" alt="Tela 1" width="800">
 
 Fonte: Autor, 2020
 
 Figura 2 - Tela do módulo de vendas
 
-![](RackMultipart20210526-4-1ghzx9z_html_98a9fd5471cfeaae.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_2.jpg" alt="Tela 2" width="800">
 
 Fonte: Autor, 2020
 
 Figura 3 - Tela do módulo do comprovante de compra
 
-![](RackMultipart20210526-4-1ghzx9z_html_692d6e60a03c206a.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_3.jpg" alt="Tela 3" width="800">
 
 Fonte: Autor, 2020
 
 Figura 4 - Tela do módulo do fluxo de caixa
 
-![](RackMultipart20210526-4-1ghzx9z_html_790c3fc7961ba25c.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/tela_4.jpg" alt="Tela 4" width="800">
 
 Fonte: Autor, 2020
 
@@ -145,7 +157,7 @@ Todo desenvolvimento foi feito por meio da IDE Dev C++, abaixo figura 5 que most
 
 Figura 5 - Organização da solução
 
-![](RackMultipart20210526-4-1ghzx9z_html_5ba6d6b60c51ced0.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders.jpg" alt="Solução" width="800">
 
 Fonte: Autor, 2020
 
@@ -166,7 +178,7 @@ Aqui vamos descrever a estrutura de pastas da aplicação. Veja a figura 6 e as 
 
 Figura 6 - Estrutura de pastas da solução
 
-![](RackMultipart20210526-4-1ghzx9z_html_74e23f1e90f23447.png)
+<img src="https://github.com/macgyver1985/experimental-project-in-c/blob/master/docs/folders_2.jpg" alt="Estrutura de Pastas" width="800">
 
 Fonte: Autor, 2020
 
@@ -177,13 +189,13 @@ Agora vamos entender a estrutura:
 - dist: Pasta onde fica o executável que é gerado. É aqui que fica a versão de distribuição da aplicação, ou seja, para executá-la basta executar o arquivo TicketSales.exe existente dentro dessa pasta.
 - src: É aqui que ficam os arquivos fontes da aplicação.
 
-# 3 GLOSSÁRIO
+## 4 GLOSSÁRIO
 
 Figma: Ferramenta WEB usada para construção de protótipos de telas.
 
 IDE: Ambiente de Desenvolvimento Integrado.
 
-# REFERÊNCIAS
+## REFERÊNCIAS
 
 [https://docs.microsoft.com/en-us/windows/win32/](https://docs.microsoft.com/en-us/windows/win32/), data de acesso em 20 de Maio de 2020.
 
